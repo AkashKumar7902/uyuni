@@ -72,7 +72,7 @@ const StepsProgressBar = ({ className, steps, onCreate, onCancel }: StepsProgres
         </div>
       </div>
       <div className="progress-bar-footer">
-        <Button className="btn-default btn-sm pull-left" text="Cancel" handler={cancel} />
+        <Button className="btn-default btn-sm pull-left" text={t("Cancel")} handler={cancel} />
         <div className="pull-right">
           <Button
             className={`btn-default btn-sm me-3 ${currentStep === 0 ? "d-none" : ""}`}
