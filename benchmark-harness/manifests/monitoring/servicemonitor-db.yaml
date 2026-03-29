@@ -1,0 +1,24 @@
+# Template ServiceMonitor for database service metrics.
+# Kept as a static reference manifest; runtime bootstrap may render dynamic variant.
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: uyuni-db-benchmark
+  namespace: monitoring
+  labels:
+    app.kubernetes.io/name: benchmark-harness
+spec:
+  # Selector matches DB service labeled by bootstrap_monitoring.sh.
+  namespaceSelector:
+    matchNames:
+      - uyuni
+  selector:
+    matchLabels:
+      benchmark-harness-target: db
+  endpoints:
+    # Default DB metrics endpoint values; may differ by deployment/exporter setup.
+    - interval: 15s
+      scrapeTimeout: 10s
+      path: /metrics
+      scheme: http
+      targetPort: 5432

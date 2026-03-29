@@ -1,0 +1,61 @@
+# Benchmark profile matrix.
+# This file documents intended scenario shapes for smoke/full runs.
+# Current scripts still apply some defaults directly from environment; keep this
+# file aligned as the canonical planning reference.
+profiles:
+  smoke:
+    # Number of repeated runs per scenario/client tuple.
+    runs: 3
+    pgbench:
+      # Smoke emphasizes quick signal with lower scale and fewer clients.
+      scenarios:
+        - builtin_default
+        - readonly_custom
+      scale: 10
+      clients: [1, 4, 8]
+      duration: 60
+    uyuni:
+      repo_sync_minimal:
+        # Repo sync is intentionally skipped in smoke to keep run time manageable.
+        enabled: false
+        runs: 0
+      metadata_refresh:
+        enabled: true
+        runs: 3
+      ui_locust:
+        enabled: true
+        users: [5, 10]
+        spawn_rate: 2
+        duration: 120
+      package_download:
+        enabled: true
+        concurrency: [1, 4]
+        limit: 5
+
+  full:
+    # Full profile captures heavier load and full scenario set.
+    runs: 3
+    pgbench:
+      scenarios:
+        - builtin_default
+        - readonly_custom
+        - wal_small_update
+      scale: 50
+      clients: [1, 4, 8, 16]
+      duration: 120
+    uyuni:
+      repo_sync_minimal:
+        enabled: true
+        runs: 3
+      metadata_refresh:
+        enabled: true
+        runs: 3
+      ui_locust:
+        enabled: true
+        users: [5, 10, 20]
+        spawn_rate: 2
+        duration: 180
+      package_download:
+        enabled: true
+        concurrency: [1, 4, 8]
+        limit: 5
