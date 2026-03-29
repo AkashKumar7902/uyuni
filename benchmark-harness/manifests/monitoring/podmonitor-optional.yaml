@@ -1,0 +1,22 @@
+# Optional PodMonitor for workloads exposing pod-level /metrics directly.
+# Enable by labeling pods with benchmark-harness-pod-monitor=true.
+apiVersion: monitoring.coreos.com/v1
+kind: PodMonitor
+metadata:
+  name: uyuni-benchmark-optional
+  namespace: monitoring
+  labels:
+    app.kubernetes.io/name: benchmark-harness
+spec:
+  # Keep selection explicit so unrelated pods are never scraped accidentally.
+  namespaceSelector:
+    matchNames:
+      - uyuni
+  selector:
+    matchLabels:
+      benchmark-harness-pod-monitor: "true"
+  podMetricsEndpoints:
+    - interval: 15s
+      scrapeTimeout: 10s
+      path: /metrics
+      port: http

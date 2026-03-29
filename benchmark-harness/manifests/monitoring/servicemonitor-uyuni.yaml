@@ -1,0 +1,24 @@
+# Template ServiceMonitor for Uyuni service metrics.
+# The bootstrap script may generate an equivalent monitor dynamically with detected target ports.
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: uyuni-benchmark
+  namespace: monitoring
+  labels:
+    app.kubernetes.io/name: benchmark-harness
+spec:
+  # Scrape services in Uyuni namespace that were explicitly labeled as benchmark targets.
+  namespaceSelector:
+    matchNames:
+      - uyuni
+  selector:
+    matchLabels:
+      benchmark-harness-target: uyuni
+  endpoints:
+    # Keep scrape interval modest for benchmark runs while limiting overhead.
+    - interval: 15s
+      scrapeTimeout: 10s
+      path: /metrics
+      scheme: http
+      targetPort: 80
